@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9.00"
+	Name="simple_math"
+	RootNamespace="simple_math"
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
+	>
+	<Platforms>
+		<Platform Name="Win32" />
+		<Platform Name="x64" />
+	</Platforms>
+	<ToolFiles />
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="bin/$(PlatformName)/"
+			IntermediateDirectory="build/$(PlatformName)_$(ConfigurationName)/$(ProjectName)/"
+			ConfigurationType="2"
+			CharacterSet="1"
+                        UseOfMFC="0"
+			>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="include;../../common/include;../../../include;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0600"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="1"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="include;../../common/include;../../../include;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libpxc_d.lib "
+				OutputFile="$(OutDir)$(ProjectName).dll"
+				ModuleDefinitionFile=""
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../lib/$(PlatformName);$(PCSDK_DIR)/lib/$(PlatformName)"
+				GenerateDebugInformation="true"
+
+				SubSystem="2"
+				LinkTimeCodeGeneration="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)$(ProjectName).dll"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="bin/$(PlatformName)/"
+			IntermediateDirectory="build/$(PlatformName)_$(ConfigurationName)/$(ProjectName)/"
+			ConfigurationType="2"
+			CharacterSet="1"
+                        UseOfMFC="0"
+			>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="include;../../common/include;../../../include;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include"
+				PreprocessorDefinitions="WIN64;_DEBUG;_CONSOLE;_WIN64_WINNT=0x0600"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="1"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="include;../../common/include;../../../include;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libpxc_d.lib "
+				OutputFile="$(OutDir)$(ProjectName).dll"
+				ModuleDefinitionFile=""
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../lib/$(PlatformName);$(PCSDK_DIR)/lib/$(PlatformName)"
+				GenerateDebugInformation="true"
+				LinkTimeCodeGeneration="0"
+				SubSystem="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)$(ProjectName).dll"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="bin/$(PlatformName)/"
+			IntermediateDirectory="build/$(PlatformName)_$(ConfigurationName)/$(ProjectName)/"
+			ConfigurationType="2"
+			CharacterSet="1"
+                        UseOfMFC="0"
+			>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="include;../../common/include;../../../include;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_WIN32_WINNT=0x0600"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="1"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="include;../../common/include;../../../include;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libpxc.lib "
+				OutputFile="$(OutDir)$(ProjectName).dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../lib/$(PlatformName);$(PCSDK_DIR)/lib/$(PlatformName)"
+				ModuleDefinitionFile=""
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				LinkTimeCodeGeneration="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)$(ProjectName).dll"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="bin/$(PlatformName)/"
+			IntermediateDirectory="build/$(PlatformName)_$(ConfigurationName)/$(ProjectName)/"
+			ConfigurationType="2"
+			CharacterSet="1"
+                        UseOfMFC="0"
+			>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="include;../../common/include;../../../include;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include"
+				PreprocessorDefinitions="WIN64;NDEBUG;_CONSOLE;_WIN64_WINNT=0x0600"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="1"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="include;../../common/include;../../../include;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libpxc.lib "
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../lib/$(PlatformName);$(PCSDK_DIR)/lib/$(PlatformName)"
+				ModuleDefinitionFile=""
+				OutputFile="$(OutDir)$(ProjectName).dll"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				LinkTimeCodeGeneration="0"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)$(ProjectName).dll"
+			/>
+		</Configuration>
+	</Configurations>
+	<References />
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			>
+			<File	RelativePath="src\math_sync.cpp"  />
+			<File	RelativePath="src\math_async.cpp"  />
+			<File	RelativePath="src\math_power.cpp"  />
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			>
+			<File	RelativePath="resource.h"  />
+			<File	RelativePath="include\math_async.h"  />
+			<File	RelativePath="include\math_sync.h"  />
+			<File	RelativePath="..\common\include\util_asyncimpl.h"  />
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc"
+			>
+			<File	RelativePath="simple_math.rc"  />
+		</Filter>
+	</Files>
+	<Globals />
+</VisualStudioProject>

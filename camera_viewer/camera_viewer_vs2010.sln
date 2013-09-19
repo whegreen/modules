@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "camera_viewer", "camera_viewer_vs2010.vcxproj", "{1F30D4A3-62C0-8659-0267-1A6511B54E8E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Object Detection", "..\Object Detection\Object Detection.vcxproj", "{48C8DB0D-8740-41EF-A832-68D0B8492DCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F30D4A3-62C0-8659-0267-1A6511B54E8E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1F30D4A3-62C0-8659-0267-1A6511B54E8E}.Debug|Win32.Build.0 = Debug|Win32
+		{1F30D4A3-62C0-8659-0267-1A6511B54E8E}.Debug|x64.ActiveCfg = Debug|x64
+		{1F30D4A3-62C0-8659-0267-1A6511B54E8E}.Debug|x64.Build.0 = Debug|x64
+		{1F30D4A3-62C0-8659-0267-1A6511B54E8E}.Release|Win32.ActiveCfg = Release|Win32
+		{1F30D4A3-62C0-8659-0267-1A6511B54E8E}.Release|Win32.Build.0 = Release|Win32
+		{1F30D4A3-62C0-8659-0267-1A6511B54E8E}.Release|x64.ActiveCfg = Release|x64
+		{1F30D4A3-62C0-8659-0267-1A6511B54E8E}.Release|x64.Build.0 = Release|x64
+		{48C8DB0D-8740-41EF-A832-68D0B8492DCD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{48C8DB0D-8740-41EF-A832-68D0B8492DCD}.Debug|Win32.Build.0 = Debug|Win32
+		{48C8DB0D-8740-41EF-A832-68D0B8492DCD}.Debug|x64.ActiveCfg = Debug|Win32
+		{48C8DB0D-8740-41EF-A832-68D0B8492DCD}.Release|Win32.ActiveCfg = Release|Win32
+		{48C8DB0D-8740-41EF-A832-68D0B8492DCD}.Release|Win32.Build.0 = Release|Win32
+		{48C8DB0D-8740-41EF-A832-68D0B8492DCD}.Release|x64.ActiveCfg = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
