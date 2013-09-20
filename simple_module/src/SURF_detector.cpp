@@ -24,14 +24,18 @@ int main()
   //if( argc != 3 )
   //{ readme(); return -1; }
 
-  Mat img_2 = imread( "full2.png", IMREAD_GRAYSCALE );
-  Mat img_1 = imread( "sample2.png", IMREAD_GRAYSCALE );
+  //Mat img_2 = imread( "full2.png", IMREAD_GRAYSCALE );
+  //Mat img_1 = imread( "sample2.png", IMREAD_GRAYSCALE );
+
+  Mat img_2 = imread( "sample3.png", IMREAD_GRAYSCALE );
+  Mat img_1 = imread( "sample3.png", IMREAD_GRAYSCALE );
 
   if( !img_1.data || !img_2.data )
   { std::cout<< " --(!) Error reading images " << std::endl; return -1; }
 
   //-- Step 1: Detect the keypoints using SURF Detector
-  int minHessian = 80;
+  //400
+  int minHessian = 1;
 
   SurfFeatureDetector detector( minHessian );
 
