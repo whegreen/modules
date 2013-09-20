@@ -6,7 +6,7 @@
 #define __SURF_FLANN_ASYNC_H__
 //#include "pxcbase.h"
 #include "pxcscheduler.h"
-#include "opencv2/core/core.hpp"
+//#include "opencv2/core/core.hpp"
 
 class PXCSURFFLANNAsync:public PXCBase {  /* an interface definition needs to derive from PXCBase */
 public:

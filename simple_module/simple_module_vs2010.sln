@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "handseal_detect", "..\hands
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "camera_viewer", "..\camera_viewer\camera_viewer_vs2010.vcxproj", "{E31B499D-3373-C8C0-1BF9-F00B68E9304C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpxcupipeline", "..\pxcupipeline\libpxcupipeline_vs2010.vcxproj", "{D329FDB1-9116-AF4A-6D9F-2AD0EBA68E45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -61,6 +63,12 @@ Global
 		{E31B499D-3373-C8C0-1BF9-F00B68E9304C}.Release|Win32.ActiveCfg = Release|Win32
 		{E31B499D-3373-C8C0-1BF9-F00B68E9304C}.Release|Win32.Build.0 = Release|Win32
 		{E31B499D-3373-C8C0-1BF9-F00B68E9304C}.Release|x64.ActiveCfg = Release|Win32
+		{D329FDB1-9116-AF4A-6D9F-2AD0EBA68E45}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D329FDB1-9116-AF4A-6D9F-2AD0EBA68E45}.Debug|Win32.Build.0 = Debug|Win32
+		{D329FDB1-9116-AF4A-6D9F-2AD0EBA68E45}.Debug|x64.ActiveCfg = Debug|Win32
+		{D329FDB1-9116-AF4A-6D9F-2AD0EBA68E45}.Release|Win32.ActiveCfg = Release|Win32
+		{D329FDB1-9116-AF4A-6D9F-2AD0EBA68E45}.Release|Win32.Build.0 = Release|Win32
+		{D329FDB1-9116-AF4A-6D9F-2AD0EBA68E45}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
