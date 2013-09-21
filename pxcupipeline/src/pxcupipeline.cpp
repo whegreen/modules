@@ -16,7 +16,6 @@ Copyright(c) 2012-2013 Intel Corporation. All Rights Reserved.
 #include "pxcupipeline.h"
 #include "pxcmetadata.h"
 #include "util_pipeline.h"
-
 #endif
 
 #ifndef PXCUPIPELINE_INSTANCE

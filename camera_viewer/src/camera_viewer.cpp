@@ -17,6 +17,9 @@
 //#include "pxcsmartptr.h"
 #include "surf_flann_async.h"
 
+#include "ippi.h"
+#include "ippcore.h"
+
 using namespace std;
 using namespace cv;
 
@@ -60,20 +63,45 @@ int wmain() {
 
 	PXCSmartPtr<PXCSURFFLANNAsync> SURFFLANNAsync;
 	pxcStatus sts=session->CreateImpl<PXCSURFFLANNAsync>(&SURFFLANNAsync);
-	//PXCImage::ImageData data;
-
-	IplImage *colorimg = cvCreateImage(cvSize(320, 240), 16, 1);
-
+	
 	/* stream data */
+	PXCSmartPtr<PXCImage> image;
+	PXCImage::ImageInfo info;
+	PXCImage::ImageData data;
+	pxcU32* idx = 0;
+		
+	//init sync proses
+	uc.QueryVideoStream(0)->ReadStreamAsync(&image,&sp[0]);	
+	SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, &sp[1]);
 	for (;;) {
-		PXCSmartPtr<PXCImage> image;
 		
-		if (uc.QueryVideoStream(0)->ReadStreamAsync(&image,&sp[0])<PXC_STATUS_NO_ERROR) continue;
+		sp.SynchronizeEx(idx);
 		
-		//SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, &sp[1]);  
-		SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, &sp[1]);
-		sp.SynchronizeEx();
+		if (sp[0]->Synchronize(0)<PXC_STATUS_NO_ERROR) continue;
 		
+		
+		image->QueryInfo(&info);
+		image->AcquireAccess(PXCImage::ACCESS_READ,&data);
+		//cout << "info : " << info.width << endl;
+		short* Idata=new short[240*320*1];
+		IppiSize roi={ info.width, info.height };
+		ippiCopy_16u_C1R((Ipp16u*)data.planes[0],data.pitches[0],(Ipp16u*)Idata,data.pitches[0],roi);
+		Mat frame(240, 320, CV_16UC1, Idata);
+		imshow( "test capture 1", frame );
+
+		int c = waitKey(7);
+		if( (char)c == 27 ) { break; }
+
+		image->ReleaseAccess(&data);
+		
+
+		uc.QueryVideoStream(0)->ReadStreamAsync(image.ReleaseRef(),sp.ReleaseRef(0));
+		
+		if (sp[1]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("error"); continue;};
+
+		SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, sp.ReleaseRef(1));
+			
+			
 		/*
 		PXCImage::ImageData data;
 		image->AcquireAccess(PXCImage::ACCESS_READ_WRITE,&data);		
@@ -118,14 +146,7 @@ int wmain() {
 		*/
 	
 		//sp.SynchronizeEx();
-		//----------AFTER SYNC----------
-		//imshow( "test capture", frame );
-
-		//todo: dipindah ke dll
-		//image->ReleaseAccess(&data);
-		//ehw
-		//-- bail out if escape was pressed
-		//int c = waitKey(10);
-		//if( (char)c == 27 ) { break; }
+		
 	}
+	sp.SynchronizeEx();
 }//close main void
