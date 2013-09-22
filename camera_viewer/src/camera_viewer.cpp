@@ -52,19 +52,15 @@ int wmain() {
 	uc.LocateStreams(&req);
 
 	pxcF32 templateIdx;
-	templateIdx = 1;
+	templateIdx = 2;
 
 	pxcF32 o;
-	o = 0;
-
-	pxcF32 o2;
-	o2 = 0;
-
-	PXCSmartSPArray sp(3);
+	o = 1;
+	
+	PXCSmartSPArray sp(2);
 	PXCSmartPtr<PXCSURFFLANNAsync> SURFFLANNAsync;
 	pxcStatus sts=session->CreateImpl<PXCSURFFLANNAsync>(&SURFFLANNAsync);
 	
-	PXCSmartSP sps;
 
 	/* stream data */
 	PXCSmartPtr<PXCImage> image;
@@ -72,10 +68,9 @@ int wmain() {
 	PXCImage::ImageData data;
 	pxcU32* idx = 0;
 	
-	string name = "tes";
-
 	//init sync proses
 	uc.QueryVideoStream(0)->ReadStreamAsync(&image,&sp[0]);	
+	//mode perform surf flann
 	SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, &sp[1]);
 
 	bool record = false;
@@ -102,33 +97,49 @@ int wmain() {
 		image->ReleaseAccess(&data);
 
   		uc.QueryVideoStream(0)->ReadStreamAsync(image.ReleaseRef(),sp.ReleaseRef(0));
-		  
-		if (sp[1]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("error"); continue;};
-		SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, sp.ReleaseRef(1));
 		
-		/*
-		//ready countdown to capture
-		IplImage ii = IplImage();
-		SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, sp.ReleaseRef(2));
-		//SURFFLANNAsync->RecordSampleAsync(image, &o2, &sp[2]);
-		sp[2]->Synchronize(0);
-
-		int i = 0;
-		if(record){
-			record = false;
-			while(i<3){
-				i++;
-				cout << "counter : " << i << endl;
+			int i = 0;
+			if(record){
+				record = false;
+				
+				printf("\n\n\n perform handseal! \n");
+				templateIdx = 2;
+				
 				Sleep(1000);
+
+				if (sp[0]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("loop error 1 sleep"); continue;};
+				uc.QueryVideoStream(0)->ReadStreamAsync(image.ReleaseRef(),sp.ReleaseRef(0));
+
+				if (sp[1]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("loop error 2 sleep"); continue;};
+				SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, sp.ReleaseRef(1));
+			
+				cout << "recording gesture : " << endl;
+
+				while(i<60){
+					i++;
+					cout << "... ";
+					
+					if (sp[0]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("loop error video"); continue;};
+					uc.QueryVideoStream(0)->ReadStreamAsync(image.ReleaseRef(),sp.ReleaseRef(0));
+				
+					Sleep(50);
+				}
+				//mode record pattern
+				templateIdx = 1;
+				if (sp[1]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("error record pattern"); continue;};
+				SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, sp.ReleaseRef(1));
+				templateIdx = 2;
+
+				cout << "\n\n seal recorded "  << endl;
+				Sleep(2000);
+				o++;				
 			}
-			//if (sp[2]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("error"); continue;};
 			
-			
-			
-			
-		}
-		*/
-		
+			else{
+				//mode perform surf flann
+				if (sp[1]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("error surf flann"); continue;};
+				SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, sp.ReleaseRef(1));
+			}
 		
 	}
 	sp.SynchronizeEx();
