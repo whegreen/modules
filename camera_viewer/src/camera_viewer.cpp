@@ -1,3 +1,8 @@
+/*******************************************************************************
+	whe_green@yahoo.co.id
+	ninjutsu showdown project
+	september 2013
+*******************************************************************************/
 #include <stdio.h>
 #include <iostream>
 
@@ -12,9 +17,6 @@
 
 #include <windows.h>
 #include <tchar.h>
-//#include "pxcpowerstate.h"
-//#include "pxcsession.h"
-//#include "pxcsmartptr.h"
 #include "surf_flann_async.h"
 
 #include "ippi.h"
@@ -28,10 +30,7 @@ using namespace cv;
 /** Global variables */
 String window_name = "Capture - Face detection";
 
-
 int wmain() {
-
-	//Mat frame;
 	Mat frame;
 	/* create a session */
 	PXCSmartPtr<PXCSession> session;
@@ -58,27 +57,36 @@ int wmain() {
 	pxcF32 o;
 	o = 0;
 
-	PXCSmartSPArray sp(2);
-	//PXCSmartSP sp;
+	pxcF32 o2;
+	o2 = 0;
 
+	PXCSmartSPArray sp(3);
 	PXCSmartPtr<PXCSURFFLANNAsync> SURFFLANNAsync;
 	pxcStatus sts=session->CreateImpl<PXCSURFFLANNAsync>(&SURFFLANNAsync);
 	
+	PXCSmartSP sps;
+
 	/* stream data */
 	PXCSmartPtr<PXCImage> image;
 	PXCImage::ImageInfo info;
 	PXCImage::ImageData data;
 	pxcU32* idx = 0;
-		
+	
+	string name = "tes";
+	//string *ptrName = &name;
+
 	//init sync proses
 	uc.QueryVideoStream(0)->ReadStreamAsync(&image,&sp[0]);	
 	SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, &sp[1]);
+	//SURFFLANNAsync->RecordSampleAsync(image, &name, &o, &sp[1]);
+
+	bool record = false;
+
 	for (;;) {
 		
 		sp.SynchronizeEx(idx);
 		
 		if (sp[0]->Synchronize(0)<PXC_STATUS_NO_ERROR) continue;
-		
 		
 		image->QueryInfo(&info);
 		image->AcquireAccess(PXCImage::ACCESS_READ,&data);
@@ -89,64 +97,42 @@ int wmain() {
 		Mat frame(240, 320, CV_16UC1, Idata);
 		imshow( "test capture 1", frame );
 
-		int c = waitKey(7);
+		int c = waitKey(5);
 		if( (char)c == 27 ) { break; }
+		else if ((char)c == 32){ record = true; }
 
 		image->ReleaseAccess(&data);
-		
 
-		uc.QueryVideoStream(0)->ReadStreamAsync(image.ReleaseRef(),sp.ReleaseRef(0));
-		
+  		uc.QueryVideoStream(0)->ReadStreamAsync(image.ReleaseRef(),sp.ReleaseRef(0));
+		  
 		if (sp[1]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("error"); continue;};
-
 		SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, sp.ReleaseRef(1));
+		
+		/*
+		//ready countdown to capture
+		IplImage ii = IplImage();
+		SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, sp.ReleaseRef(2));
+		//SURFFLANNAsync->RecordSampleAsync(image, &o2, &sp[2]);
+		sp[2]->Synchronize(0);
+
+		int i = 0;
+		if(record){
+			record = false;
+			while(i<3){
+				i++;
+				cout << "counter : " << i << endl;
+				Sleep(1000);
+			}
+			//if (sp[2]->Synchronize(0)<PXC_STATUS_NO_ERROR) {printf("error"); continue;};
 			
 			
-		/*
-		PXCImage::ImageData data;
-		image->AcquireAccess(PXCImage::ACCESS_READ_WRITE,&data);		
-		
-		
-		cvSetData(colorimg, (short*)data.planes[0], 320*sizeof(short)*1);
-		image->ReleaseAccess(&data);
-
-		Mat newFrame = cvarrToMat(colorimg,true);
-		
-		*/
-		//printf("------- inside DLL -------");
-
-		/*
-		PXCImage::ImageData data;
-		image->AcquireAccess(PXCImage::ACCESS_READ_WRITE,&data);		
-		IplImage *colorimg = cvCreateImage(cvSize(320, 240), 16, 1);
-		cvSetData(colorimg, (short*)data.planes[0], 320*sizeof(short)*1);
-		image->ReleaseAccess(&data);
-		Mat newFrame = cvarrToMat(colorimg,true);
-		imshow( "test capture", newFrame );
-		waitKey(1);
-		*/
-
-		// todo: dipindah ke dalam dll
-	   
-		/*
-		image->AcquireAccess(PXCImage::ACCESS_READ_WRITE,&data);
-		IplImage* colorimg = cvCreateImage(cvSize(320, 240), 16, 1);
-		cvSetData(colorimg, (short*)data.planes[0], 320*sizeof(short)*1);
-		Mat frame = cvarrToMat(colorimg);
-		*/
-
-		//todo: call handseal_detect here
-		//whe call void from dll
-		
-		/*
-		//proses 1
-		if (sts>=PXC_STATUS_NO_ERROR) {
-			SURFFLANNAsync->HandsealDetectAsync(&frame, &templateIdx, &o, &sp[1]);  
+			
+			
 		}
 		*/
-	
-		//sp.SynchronizeEx();
+		
 		
 	}
 	sp.SynchronizeEx();
+	//delete ptrName;
 }//close main void

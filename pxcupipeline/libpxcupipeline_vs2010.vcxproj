@@ -196,7 +196,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\Users\Green\Downloads\Test.cpp" />
     <ClCompile Include="src\pxcupipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
