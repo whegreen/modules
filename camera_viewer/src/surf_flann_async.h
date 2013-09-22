@@ -14,8 +14,7 @@ public:
 
     /* a virtual function interfaces. No implementation, static functions or data definitions */
 	virtual pxcStatus PXCAPI HandsealDetectAsync(PXCImage *frame, pxcF32 *templateIdx, pxcF32 *o, PXCScheduler::SyncPoint **sp)=0;
-	virtual pxcStatus PXCAPI HandsealDetectAsync2(PXCImage *frame, pxcF32 *templateIdx, pxcF32 *o, PXCScheduler::SyncPoint **sp)=0;
-	virtual pxcStatus PXCAPI RecordSampleAsync(PXCImage *frame, pxcF32 *o, PXCScheduler::SyncPoint **sp)=0;
+	
 };
 
 #endif

@@ -73,12 +73,10 @@ int wmain() {
 	pxcU32* idx = 0;
 	
 	string name = "tes";
-	//string *ptrName = &name;
 
 	//init sync proses
 	uc.QueryVideoStream(0)->ReadStreamAsync(&image,&sp[0]);	
 	SURFFLANNAsync->HandsealDetectAsync(image, &templateIdx, &o, &sp[1]);
-	//SURFFLANNAsync->RecordSampleAsync(image, &name, &o, &sp[1]);
 
 	bool record = false;
 
