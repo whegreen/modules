@@ -1,12 +1,10 @@
 /*******************************************************************************
-
-INTEL CORPORATION PROPRIETARY INFORMATION
-This software is supplied under the terms of a license agreement or nondisclosure
-agreement with Intel Corporation and may not be copied or disclosed except in
-accordance with the terms of that agreement
-Copyright(c) 2012-2013 Intel Corporation. All Rights Reserved.
-
+	whe_green@yahoo.co.id
+	ninjutsu showdown project
+	september 2013
 *******************************************************************************/
+
+
 #ifndef PXCUPIPELINE_HEADERS
 #define PXCUPIPELINE_HEADERS
 #include <vector>
@@ -25,34 +23,7 @@ struct _PXCUPipeline_Instance {
 
 	class UtilPipelinePXCU: public UtilPipeline {
     public:
-        UtilPipelinePXCU(pxcCHAR *filename):UtilPipeline(NULL, filename) { m_data.timeStamp=0; memset(&m_vrec_pinfo,0,sizeof(m_vrec_pinfo)); }
-		virtual void OnVoiceRecognitionSetup(PXCVoiceRecognition::ProfileInfo *pinfo) { if (m_vrec_pinfo.language) pinfo->language=m_vrec_pinfo.language; }
-	    virtual void PXCAPI OnRecognized(PXCVoiceRecognition::Recognition *data) { m_data=(*data); }
-        virtual void PXCAPI OnAlert(PXCVoiceRecognition::Alert *data) {
-            m_data.timeStamp=data->timeStamp;
-            for (int i=0;i<4;i++) {
-                m_data.nBest[i].confidence=0;
-                m_data.nBest[i].label= -1;
-            }
-            switch (data->label) {
-            case PXCVoiceRecognition::Alert::LABEL_VOLUME_HIGH:
-                wcscpy_s<sizeof(m_data.dictation)/sizeof(pxcCHAR)>(m_data.dictation,L"!VOLUME_HIGH");
-                break;
-            case PXCVoiceRecognition::Alert::LABEL_VOLUME_LOW:
-                wcscpy_s<sizeof(m_data.dictation)/sizeof(pxcCHAR)>(m_data.dictation,L"!VOLUME_LOW"); 
-                break;
-            case PXCVoiceRecognition::Alert::LABEL_SNR_LOW:
-                wcscpy_s<sizeof(m_data.dictation)/sizeof(pxcCHAR)>(m_data.dictation,L"!SNR_LOW");
-                break;
-            case PXCVoiceRecognition::Alert::LABEL_SPEECH_UNRECOGNIZABLE:
-                wcscpy_s<sizeof(m_data.dictation)/sizeof(pxcCHAR)>(m_data.dictation,L"!SPEECH_UNRECOGNIZABLE"); 
-                break;
-            default:
-                wcscpy_s<sizeof(m_data.dictation)/sizeof(pxcCHAR)>(m_data.dictation,L"!UNKNOWN");
-            }
-        }
-        PXCVoiceRecognition::Recognition m_data;
-		PXCVoiceRecognition::ProfileInfo m_vrec_pinfo;
+        UtilPipelinePXCU(pxcCHAR *filename):UtilPipeline(NULL, filename) { memset(&m_vrec_pinfo,0,sizeof(m_vrec_pinfo)); }
     } pipeline;
 
     std::vector<std::wstring>  strings;
@@ -79,9 +50,6 @@ static bool Init(PXCUPipeline_Instance instance, PXCUPipeline mode) {
 	if (mode&PXCU_PIPELINE_COLOR_WXGA)          instance->pipeline.EnableImage(PXCImage::COLOR_FORMAT_RGB24,1280,720);
 	if (mode&PXCU_PIPELINE_DEPTH_QVGA)          instance->pipeline.EnableImage(PXCImage::COLOR_FORMAT_DEPTH,320,240);
 	if (mode&PXCU_PIPELINE_GESTURE)             instance->pipeline.EnableGesture();
-	if (mode&PXCU_PIPELINE_FACE_LOCATION)       instance->pipeline.EnableFaceLocation();
-	if (mode&PXCU_PIPELINE_FACE_LANDMARK)       instance->pipeline.EnableFaceLandmark();
-    if (mode&PXCU_PIPELINE_VOICE_RECOGNITION)   instance->pipeline.EnableVoiceRecognition();
 	if (mode&PXCU_PIPELINE_DEPTH_QVGA_60FPS) {
 		instance->pipeline.EnableImage(PXCImage::COLOR_FORMAT_DEPTH,320,240);
 		PXCSizeU32 size={0,0};
@@ -112,22 +80,17 @@ bool __stdcall PXCUPipeline_IsDisconnected(PXCUPipeline_Instance instance) {
 bool __stdcall PXCUPipeline_QueryRGB(PXCUPipeline_Instance instance, unsigned char *data) {
 	if (instance->pipeline.IsDisconnected()) return false;
     if (!instance->pipeline.IsImageFrame()) return false;
-    //ambil instance image ke var image
 	PXCImage *image=instance->pipeline.QueryImage(PXCImage::IMAGE_TYPE_COLOR);
     if (!image) return false;
 
-	
     PXCImage::ImageInfo info;
-    //ambil image info ke var info
 	image->QueryInfo(&info);
     PXCImage::ImageData data2;
-    //ambil akses image data ke var data2
 	pxcStatus sts=image->AcquireAccess(PXCImage::ACCESS_READ,PXCImage::COLOR_FORMAT_RGB32,&data2);
     if (sts<PXC_STATUS_NO_ERROR) return false;
 
     IppiSize roi={ info.width, info.height };
     int dstOrder[3]={2,1,0};
-	//ngeset return value ke parameter out data
     ippiSwapChannels_8u_AC4R(data2.planes[0],data2.pitches[0],data,data2.pitches[0],roi,dstOrder);
     image->ReleaseAccess(&data2);
     return true;
@@ -309,74 +272,85 @@ bool __stdcall PXCUPipeline_QueryGesture(PXCUPipeline_Instance instance, PXCGest
 	return gesture->QueryGestureData(0,body,0,data)>=PXC_STATUS_NO_ERROR;
 }
 
-bool __stdcall PXCUPipeline_QueryFaceID(PXCUPipeline_Instance instance, int fidx, pxcUID *face, pxcU64 *timeStamp) {
+bool __stdcall PXCUPipeline_QueryMatchHandseal(PXCUPipeline_Instance instance, int *handsealIdx, bool *matchResult){
 	if (instance->pipeline.IsDisconnected()) return false;
     if (!instance->pipeline.IsImageFrame()) return false;
-	PXCFaceAnalysis *analyzer=instance->pipeline.QueryFace();
-	if (!analyzer) return false;
-	return analyzer->QueryFace(fidx,face,timeStamp)>=PXC_STATUS_NO_ERROR;
+	
+	short *data;
+
+	PXCImage *image=instance->pipeline.QueryImage(PXCImage::IMAGE_TYPE_DEPTH);
+    if (!image) return false;
+
+    PXCImage::ImageInfo info;
+    image->QueryInfo(&info);
+    PXCImage::ImageData data2;
+    pxcStatus sts=image->AcquireAccess(PXCImage::ACCESS_READ,&data2);
+    if (sts<PXC_STATUS_NO_ERROR) return false;
+
+    if (data2.planes[0]) {
+        IppiSize roi={ info.width, info.height };
+        ippiCopy_16u_C1R((Ipp16u*)data2.planes[0],data2.pitches[0],(Ipp16u*)data,data2.pitches[0],roi);
+
+		//potong bagian terdepan yang kedeteksi kamera
+
+		//panggil surf
+
+		//load modul surf berdasarkan idx
+
+		//compare pakai flann
+
+        image->ReleaseAccess(&data2);
+        return true;
+    } else {
+        image->ReleaseAccess(&data2);
+        return false;
+	}
+	
+    return true;
 }
 
-bool __stdcall PXCUPipeline_QueryFaceLocationData(PXCUPipeline_Instance instance, pxcUID face, PXCFaceAnalysis::Detection::Data *data) {
+bool __stdcall PXCUPipeline_QueryHandseal(PXCUPipeline_Instance instance, int *handsealIdx){
 	if (instance->pipeline.IsDisconnected()) return false;
     if (!instance->pipeline.IsImageFrame()) return false;
-	PXCFaceAnalysis *analyzer=instance->pipeline.QueryFace();
-	if (!analyzer) return false;
-	PXCFaceAnalysis::Detection *detection=analyzer->DynamicCast<PXCFaceAnalysis::Detection>();
-	if (!detection) return false;
-    return detection->QueryData(face,data)>=PXC_STATUS_NO_ERROR;
-}
+	
+	short *data;
 
-bool __stdcall PXCUPipeline_QueryFaceLandmarkPose(PXCUPipeline_Instance instance, pxcUID face, PXCFaceAnalysis::Landmark::PoseData *data) {
-	if (instance->pipeline.IsDisconnected()) return false;
-    if (!instance->pipeline.IsImageFrame()) return false;
-	PXCFaceAnalysis *analyzer=instance->pipeline.QueryFace();
-	if (!analyzer) return false;
-    PXCFaceAnalysis::Landmark *landmark=analyzer->DynamicCast<PXCFaceAnalysis::Landmark>();
-    if (!landmark) return false;
-    return landmark->QueryPoseData(face,data)>=PXC_STATUS_NO_ERROR;
-}
+	PXCImage *image=instance->pipeline.QueryImage(PXCImage::IMAGE_TYPE_DEPTH);
+    if (!image) return false;
 
-bool __stdcall PXCUPipeline_QueryFaceLandmarkData(PXCUPipeline_Instance instance, pxcUID face, PXCFaceAnalysis::Landmark::Label label, int idx, PXCFaceAnalysis::Landmark::LandmarkData *data) {
-	if (instance->pipeline.IsDisconnected()) return false;
-    if (!instance->pipeline.IsImageFrame()) return false;
-	PXCFaceAnalysis *analyzer=instance->pipeline.QueryFace();
-	if (!analyzer) return false;
-    PXCFaceAnalysis::Landmark *landmark=analyzer->DynamicCast<PXCFaceAnalysis::Landmark>();
-    if (!landmark) return false;
-    return landmark->QueryLandmarkData(face,label,idx,data)>=PXC_STATUS_NO_ERROR;
+    PXCImage::ImageInfo info;
+    image->QueryInfo(&info);
+    PXCImage::ImageData data2;
+    pxcStatus sts=image->AcquireAccess(PXCImage::ACCESS_READ,&data2);
+    if (sts<PXC_STATUS_NO_ERROR) return false;
+
+    if (data2.planes[0]) {
+        IppiSize roi={ info.width, info.height };
+        ippiCopy_16u_C1R((Ipp16u*)data2.planes[0],data2.pitches[0],(Ipp16u*)data,data2.pitches[0],roi);
+
+		//potong bagian terdepan yang kedeteksi kamera
+
+		//panggil surf
+
+		//looping sebanyak 12 handseal
+			//load modul surf berdasarkan idx
+			//compare pakai flann
+			//compare untuk dapat nilai maksimum hasil flann
+
+        image->ReleaseAccess(&data2);
+        return true;
+    } else {
+        image->ReleaseAccess(&data2);
+        return false;
+	}
+	
+    return true;
 }
 
 void __stdcall PXCUPipeline_Close(PXCUPipeline_Instance instance) {
 	instance->projection.ReleaseRef();
 	instance->pipeline.Close();
     instance->strings.clear();
-}
-
-bool __stdcall PXCUPipeline_QueryVoiceRecognized(PXCUPipeline_Instance instance, PXCVoiceRecognition::Recognition *data) {
-    if (instance->pipeline.m_data.timeStamp==0) return false;
-    *data=instance->pipeline.m_data;
-    instance->pipeline.m_data.timeStamp=0;
-    return true;
-}
-
-bool __stdcall PXCUPipeline_SetVoiceCommand(PXCUPipeline_Instance instance, pxcCHAR *cmd) {
-    if (cmd) if (cmd[0]) {
-        instance->strings.push_back(std::wstring(cmd));
-        return true;
-    }
-    bool sts=instance->pipeline.SetVoiceCommands(instance->strings);
-    instance->strings.clear();
-    return sts;
-}
-
-bool __stdcall PXCUPipeline_SetVoiceDictation(PXCUPipeline_Instance instance) {
-    return instance->pipeline.SetVoiceDictation();
-}
-
-bool __stdcall PXCUPipeline_SetVoiceLanguage(PXCUPipeline_Instance instance, PXCVoiceRecognition::ProfileInfo::Language language) {
-	instance->pipeline.m_vrec_pinfo.language=language;
-	return true;
 }
 
 static void GetProjectionInterface(PXCUPipeline_Instance instance) {
@@ -420,9 +394,6 @@ bool __stdcall PXCUPipeline_MapDepthToColorCoordinates(PXCUPipeline_Instance ins
 
 static void PauseFrame(PXCUPipeline_Instance instance, PXCUPipeline mode, bool pause) {
 	if (mode&PXCU_PIPELINE_GESTURE)             instance->pipeline.PauseGesture(pause);
-	if (mode&PXCU_PIPELINE_FACE_LOCATION)       instance->pipeline.PauseFaceLocation(pause);
-	if (mode&PXCU_PIPELINE_FACE_LANDMARK)       instance->pipeline.PauseFaceLandmark(pause);
-	if (mode&PXCU_PIPELINE_VOICE_RECOGNITION)   instance->pipeline.PauseVoiceRecognition(pause);
 }
 
 #ifndef PXCUPIPELINE_PAUSEFRAME

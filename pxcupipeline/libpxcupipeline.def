@@ -10,10 +10,8 @@ EXPORTS
     PXCUPipeline_IsDisconnected
     PXCUPipeline_QueryGeoNode
     PXCUPipeline_QueryGesture
-    PXCUPipeline_QueryFaceID
-    PXCUPipeline_QueryFaceLocationData
-    PXCUPipeline_QueryFaceLandmarkPose
-    PXCUPipeline_QueryFaceLandmarkData
+	PXCUPipeline_QueryMatchHandseal
+	PXCUPipeline_QueryHandseal
     PXCUPipeline_Close
     PXCUPipeline_QueryRGB
     PXCUPipeline_QueryIRMap
@@ -27,10 +25,6 @@ EXPORTS
     PXCUPipeline_QueryLabelMapSize
 	PXCUPipeline_QueryDeviceProperty
 	PXCUPipeline_SetDeviceProperty
-    PXCUPipeline_SetVoiceCommand
-    PXCUPipeline_SetVoiceDictation
-	PXCUPipeline_SetVoiceLanguage
-    PXCUPipeline_QueryVoiceRecognized
 	PXCUPipeline_ProjectImageToRealWorld
 	PXCUPipeline_ProjectRealWorldToImage
 	PXCUPipeline_MapDepthToColorCoordinates
